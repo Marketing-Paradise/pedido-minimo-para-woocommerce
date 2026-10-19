@@ -2,8 +2,8 @@
 Contributors: marketingparadise
 Tags: woocommerce, minimum order, cart, checkout, e-commerce
 Requires at least: 5.8
-Tested up to: 7.0
-Stable tag: 1.0.9
+Tested up to: 7.1
+Stable tag: 1.0.10
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -64,6 +64,10 @@ No. The plugin is extremely lightweight, and its code only runs on the cart and 
 3.  Notice on the checkout page if the minimum is not met.
 
 == Changelog ==
+
+= 1.0.10 - 2026-10-19 =
+* Confirm WordPress 7.1.3 compatibility.
+* Confirm WooCommerce 11.2.1 compatibility.
 
 = 1.0.9 - 2026-05-28 =
 * Confirm WordPress 7.0 compatibility.
