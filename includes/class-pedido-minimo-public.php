@@ -7,41 +7,75 @@
  * @author     Marketing Paradise <rafael@mkparadise.com>
  */
 
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 class PedidoMinimo_Public {
-    public function __construct()
-    {
-        add_action( 'woocommerce_check_cart_items' , array($this, 'woocommerce_importe_minimo') );
-    }
 
-     /**
-      * Set a minimum purchase amount
-      */
-    public function woocommerce_importe_minimo() {
-        $minimum = get_option( 'pedidominimo_precio_minimo', 0 );  // Value of the options page
-        $incluir_descuentos = get_option( 'pedidominimo_incluir_descuentos', '0' ); // Value of the options page
-        $mensaje = get_option('pedidominimo_mensaje_pedido_minimo');
+	public function __construct() {
+		add_action( 'woocommerce_check_cart_items', array( $this, 'woocommerce_minimum_order' ) );
+	}
 
-        if ($minimum <= 0 || ! WC()->cart ) {
-            return;
-        }
-        if ($incluir_descuentos) {
-            $subtotal_a_validar  = WC()->cart->get_cart_contents_total();
-        } else {
-            $subtotal_a_validar  = WC()->cart->get_subtotal();
-        }
-        if ( $subtotal_a_validar < $minimum ) {
-    
-            $mensaje = str_replace(
-                array( '{minimum}', '{total}' ), // Placeholders
-                array( wc_price( $minimum ), wc_price( $subtotal_a_validar ) ),
-                $mensaje
-            );
-            
-            wc_add_notice( $mensaje, 'error' );
-        }
-    }
+	/**
+	 * Valida el subtotal del carrito frente al pedido mínimo configurado.
+	 */
+	public function woocommerce_minimum_order() {
+		if ( ! WC()->cart || WC()->cart->is_empty() ) {
+			return;
+		}
+
+		$minimum = (float) apply_filters(
+			'pm_minimum_order',
+			(float) get_option( 'pedidominimo_precio_minimo', 0 )
+		);
+
+		if ( $minimum <= 0 ) {
+			return;
+		}
+
+		$incluir_descuentos = '1' === (string) get_option( 'pedidominimo_incluir_descuentos', '0' );
+		$incluir_impuestos  = WC()->cart->display_prices_including_tax();
+
+		if ( $incluir_descuentos ) {
+			$subtotal_a_validar = (float) WC()->cart->get_cart_contents_total();
+			if ( $incluir_impuestos ) {
+				$subtotal_a_validar += (float) WC()->cart->get_cart_contents_tax();
+			}
+		} else {
+			$subtotal_a_validar = (float) WC()->cart->get_subtotal();
+			if ( $incluir_impuestos ) {
+				$subtotal_a_validar += (float) WC()->cart->get_subtotal_tax();
+			}
+		}
+
+		$subtotal_a_validar = (float) apply_filters( 'pm_cart_subtotal', $subtotal_a_validar, WC()->cart );
+
+		if ( $subtotal_a_validar < $minimum ) {
+			$mensaje = get_option( 'pedidominimo_mensaje_pedido_minimo', '' );
+			if ( empty( trim( wp_strip_all_tags( $mensaje ) ) ) ) {
+				/* translators: {minimum}: minimum price value that the cart subtotal must reach, {total}: the current cart subtotal. */
+				$mensaje = esc_html__('You must place a <strong>minimum order of {minimum}</strong> to complete your purchase. Your cart total is currently {total}.', 'tu-text-domain');
+			}
+
+			$mensaje_formateado = str_replace(
+				array( '{minimum}', '{total}' ),
+				array( wc_price( $minimum ), wc_price( $subtotal_a_validar ) ),
+				$mensaje
+			);
+
+			$allowed_html = array(
+				'strong' => array(),
+				'em'     => array(),
+				'b'      => array(),
+				'i'      => array(),
+				'span'   => array(
+					'class' => array(),
+					'style' => array(),
+				),
+			);
+
+			wc_add_notice( wp_kses( $mensaje_formateado, $allowed_html ), 'error' );
+		}
+	}
 }
