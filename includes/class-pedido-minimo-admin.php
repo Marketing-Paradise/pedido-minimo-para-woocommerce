@@ -125,7 +125,7 @@ class PedidoMinimo_Admin {
                           rows="4" 
                           cols="80">' . esc_textarea($mensaje_actual) . '</textarea>';
         /* translators: {minimum}: minimum price value that the cart subtotal must reach, {total}: the current cart subtotal. */
-        echo '<p class="description">' . esc_html(__('Use {minimum} for the minimum amount and {total} for the current cart total.', 'pedido-minimo-for-woocommerce')) . '</p>';
+        echo '<p class="description">' . esc_html(__('Use {minimum} for the minimum amount and {total} for the current cart total. Allowed html tags: strong, em, b, i, span, class, style.', 'pedido-minimo-for-woocommerce')) . '</p>';
 
     }
 
