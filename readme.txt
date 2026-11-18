@@ -62,12 +62,12 @@ No. The plugin is extremely lightweight, and its code only runs on the cart and 
 
 Yes. The plugin provides two custom filter hooks for developers so you can adapt the validation logic without modifying the plugin files:
 
-* **`pm_minimum_order`**: Filters the minimum order amount before validation. Receives `(float) $minimum`.
-* **`pm_cart_subtotal`**: Filters the evaluated cart subtotal before comparing it against the minimum amount. Receives `(float) $subtotal` and `(WC_Cart) $cart`.
+* **`pedidominimo_minimum_order`**: Filters the minimum order amount before validation. Receives `(float) $minimum`.
+* **`pedidominimo_cart_subtotal`**: Filters the evaluated cart subtotal before comparing it against the minimum amount. Receives `(float) $subtotal` and `(WC_Cart) $cart`.
 
 = How can I set a different minimum order amount for specific user roles? =
 
-You can hook into `pm_minimum_order` from your child theme's `functions.php` file or a custom snippets plugin. For example, to set a 100 minimum order for wholesale customers:
+You can hook into `pedidominimo_minimum_order` from your child theme's `functions.php` file or a custom snippets plugin. For example, to set a 100 minimum order for wholesale customers:
 
 function set_wholesale_minimum_order( $minimum ) {
 	if ( ! is_user_logged_in() ) {
@@ -82,7 +82,7 @@ function set_wholesale_minimum_order( $minimum ) {
 
 	return (float) $minimum;
 }
-add_filter( 'pm_minimum_order', 'set_wholesale_minimum_order', 10, 1 );`
+add_filter( 'pedidominimo_minimum_order', 'set_wholesale_minimum_order', 10, 1 );`
 
 == Screenshots ==
 
@@ -93,7 +93,7 @@ add_filter( 'pm_minimum_order', 'set_wholesale_minimum_order', 10, 1 );`
 == Changelog ==
 
 = 1.1.0 - 2026-11-18 =
-* New: Added `pm_minimum_order` and `pm_cart_subtotal` filter hooks to allow customizing the minimum order amount and the evaluated cart subtotal.
+* New: Added `pedidominimo_minimum_order` and `pedidominimo_cart_subtotal` filter hooks to allow customizing the minimum order amount and the evaluated cart subtotal.
 * Fix: Included taxes in the evaluated cart subtotal when WooCommerce is configured to display prices including tax.
 
 = 1.0.10 - 2026-10-19 =

@@ -26,7 +26,7 @@ class PedidoMinimo_Public {
 		}
 
 		$minimum = (float) apply_filters(
-			'pm_minimum_order',
+			'pedidominimo_minimum_order',
 			(float) get_option( 'pedidominimo_precio_minimo', 0 )
 		);
 
@@ -49,13 +49,13 @@ class PedidoMinimo_Public {
 			}
 		}
 
-		$subtotal_a_validar = (float) apply_filters( 'pm_cart_subtotal', $subtotal_a_validar, WC()->cart );
+		$subtotal_a_validar = (float) apply_filters( 'pedidominimo_cart_subtotal', $subtotal_a_validar, WC()->cart );
 
 		if ( $subtotal_a_validar < $minimum ) {
 			$mensaje = get_option( 'pedidominimo_mensaje_pedido_minimo', '' );
 			if ( empty( trim( wp_strip_all_tags( $mensaje ) ) ) ) {
 				/* translators: {minimum}: minimum price value that the cart subtotal must reach, {total}: the current cart subtotal. */
-				$mensaje = esc_html__('You must place a <strong>minimum order of {minimum}</strong> to complete your purchase. Your cart total is currently {total}.', 'tu-text-domain');
+				$mensaje = esc_html__('You must place a <strong>minimum order of {minimum}</strong> to complete your purchase. Your cart total is currently {total}.', 'pedido-minimo-for-woocommerce');
 			}
 
 			$mensaje_formateado = str_replace(
