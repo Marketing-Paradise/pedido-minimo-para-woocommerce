@@ -3,7 +3,7 @@ Contributors: marketingparadise
 Tags: woocommerce, minimum order, cart, checkout, e-commerce
 Requires at least: 5.8
 Tested up to: 7.1
-Stable tag: 1.0.10
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,6 +22,7 @@ This plugin allows you to set a minimum value that the cart subtotal must reach 
 * **Clear Notices:** Messages on the cart and checkout pages to inform the user when they have not reached the minimum.
 * **Full Compatibility:** Native integration with WooCommerce and compatible with most themes.
 * **Optimal Performance:** Clean, lightweight code that aligns with WordPress development best practices.
+* **Developer-Friendly:** Includes custom filter hooks to dynamically adjust the minimum amount or the evaluated cart subtotal.
 
 == Installation ==
 
@@ -57,6 +58,32 @@ The plugin uses standard WooCommerce hooks to display notices, so it should be c
 
 No. The plugin is extremely lightweight, and its code only runs on the cart and checkout pages, so the impact on performance is negligible.
 
+= Can I dynamically change the minimum order amount or the evaluated cart subtotal using code? =
+
+Yes. The plugin provides two custom filter hooks for developers so you can adapt the validation logic without modifying the plugin files:
+
+* **`pm_minimum_order`**: Filters the minimum order amount before validation. Receives `(float) $minimum`.
+* **`pm_cart_subtotal`**: Filters the evaluated cart subtotal before comparing it against the minimum amount. Receives `(float) $subtotal` and `(WC_Cart) $cart`.
+
+= How can I set a different minimum order amount for specific user roles? =
+
+You can hook into `pm_minimum_order` from your child theme's `functions.php` file or a custom snippets plugin. For example, to set a 100 minimum order for wholesale customers:
+
+function set_wholesale_minimum_order( $minimum ) {
+	if ( ! is_user_logged_in() ) {
+		return (float) $minimum;
+	}
+
+	$user = wp_get_current_user();
+
+	if ( in_array( 'wholesale_customer', (array) $user->roles, true ) ) {
+		return 100.0;
+	}
+
+	return (float) $minimum;
+}
+add_filter( 'pm_minimum_order', 'set_wholesale_minimum_order', 10, 1 );`
+
 == Screenshots ==
 
 1.  The settings page where the minimum amount is configured.
@@ -64,6 +91,10 @@ No. The plugin is extremely lightweight, and its code only runs on the cart and 
 3.  Notice on the checkout page if the minimum is not met.
 
 == Changelog ==
+
+= 1.1.0 - 2026-11-18 =
+* New: Added `pm_minimum_order` and `pm_cart_subtotal` filter hooks to allow customizing the minimum order amount and the evaluated cart subtotal.
+* Fix: Included taxes in the evaluated cart subtotal when WooCommerce is configured to display prices including tax.
 
 = 1.0.10 - 2026-10-19 =
 * Confirm WordPress 7.1.3 compatibility.
