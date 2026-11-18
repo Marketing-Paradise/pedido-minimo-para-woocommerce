@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Minimum order for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-10 10:23+0000\n"
+"POT-Creation-Date: 2026-11-18 10:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -88,7 +88,8 @@ msgstr ""
 #. {minimum}: minimum price value that the cart subtotal must reach, {total}: the current cart subtotal.
 #: includes/class-pedido-minimo-admin.php:128
 msgid ""
-"Use {minimum} for the minimum amount and {total} for the current cart total."
+"Use {minimum} for the minimum amount and {total} for the current cart total. "
+"Allowed html tags: strong, em, b, i, span, class, style."
 msgstr ""
 
 #: pedido-minimo-for-woocommerce.php:29
